@@ -41,7 +41,6 @@ void vec3_print(t_vec3 *vec);
  * @note It's a in-place addition, so `vec1` is modified.
  */
 t_vec3 *vec3_self_add(t_vec3 *vec1, t_vec3 *vec2);
-t_vec3 vec3_minus(t_vec3 vec);
 
 /**
  * @brief Multiply the given `vec_3` with given scalar in-place.
@@ -66,6 +65,19 @@ t_vec3 *vec3_self_mul(t_vec3 *vec, float scalar);
  * @note It's an in-place division, so `vec` is modified.
  */
 t_vec3 *vec3_self_div(t_vec3 *vec, float scalar);
+
+
+/**
+ * @brief Flip the given `vec_3` by apply `*-1` to each properties.
+ * 
+ * @param vec A pointer to `t_vec3` which will be updated.
+ * 
+ * @return An instance of flipped `vec_3`.
+ * 
+ * @note It generates a new instance.
+ */
+t_vec3 vec3_flip_minus(t_vec3 *vec);
+
 
 float vec3_length_squared(t_vec3 *vec);
 float vec3_length(t_vec3 *vec);
