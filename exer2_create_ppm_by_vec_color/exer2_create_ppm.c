@@ -1,5 +1,5 @@
-#include "../vec3/vec3.h"
-#include "../color/color.h"
+#include "../supp/vec3.h"
+#include "../supp/color.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
