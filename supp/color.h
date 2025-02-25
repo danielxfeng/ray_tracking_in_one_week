@@ -12,6 +12,6 @@ typedef t_vec3 t_color;
 //
 // @param fd: file descriptor.
 // @param pixel_color: color to write, between 0 and 1.
-void write_color(int fd, t_color pixel_color);
+void write_color(int fd, t_color *pixel_color);
 
 #endif
