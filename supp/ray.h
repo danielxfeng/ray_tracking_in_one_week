@@ -12,9 +12,9 @@ typedef struct s_ray
 /**
  * @brief construct a ray on heap.
  */
-s_ray *ray_new(t_point3 *origin, t_vec3 *direction)
+t_ray *ray_new(t_point3 *origin, t_vec3 *direction)
 {
-    s_ray *ray = (s_ray *)malloc(sizeof(s_ray));
+    t_ray *ray = (t_ray *)malloc(sizeof(t_ray));
     if (!ray)
         return NULL;
     ray->origin = origin;
@@ -25,7 +25,7 @@ s_ray *ray_new(t_point3 *origin, t_vec3 *direction)
 /**
  * @brief free the ray.
  */
-void ray_free(s_ray **ray)
+void ray_free(t_ray **ray)
 {
     if (ray && *ray)
     {
@@ -41,7 +41,7 @@ void ray_free(s_ray **ray)
  * @param t the distance.
  * @return the point.
  */
-t_point3 ray_at(s_ray *ray, double t)
+t_point3 ray_at(t_ray *ray, double t)
 {
     t_point3 result = vec3_new(ray->origin->x + t * ray->direction->x,
                                ray->origin->y + t * ray->direction->y,
