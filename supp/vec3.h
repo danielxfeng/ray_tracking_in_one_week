@@ -74,7 +74,7 @@ t_vec3 *vec3_self_div(t_vec3 *vec, float scalar);
  * 
  * @return An instance of flipped `vec_3`.
  */
-t_vec3 vec3_flip_minus(const t_vec3 *vec);
+t_vec3 vec3_flip_minus(t_vec3 *vec);
 
 /**
  * @brief Returns the squared length of the given `vec_3`.
