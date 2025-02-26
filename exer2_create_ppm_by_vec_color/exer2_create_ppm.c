@@ -27,7 +27,7 @@ int main(void)
         for (int j = 0; j < SIZE; ++j)
         {
             t_color pixel_color = vec3_new((float)j / (SIZE - 1), (float)i / (SIZE - 1), 0.0);
-            write_color(fd, pixel_color);
+            write_color(fd, &pixel_color);
         }
     }
     printf("Done!\n");
