@@ -19,11 +19,6 @@ t_vec3 *vec3_self_add(t_vec3 *vec1, t_vec3 *vec2)
     return (vec1);
 }
 
-t_vec3 vec3_flip_minus(t_vec3 *vec)
-{
-    return vec3_new(-vec->x, -vec->y, -vec->z);
-}
-
 t_vec3 *vec3_self_mul(t_vec3 *vec, float scalar)
 {
     vec->x = vec->x * scalar;
@@ -38,6 +33,11 @@ t_vec3 *vec3_self_div(t_vec3 *vec, float scalar)
     vec->y = vec->y / scalar;
     vec->z = vec->z / scalar;
     return (vec);
+}
+
+t_vec3 vec3_flip_minus(t_vec3 *vec)
+{
+    return vec3_new(-vec->x, -vec->y, -vec->z);
 }
 
 float vec3_length_squared(t_vec3 *vec)
