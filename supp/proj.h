@@ -11,7 +11,7 @@
 #include <limits.h>
 
 
-# define M_PI (float)3.14159265358979323846
+# define PI (float)3.14159265358979323846
 # define DTR(degrees) (degrees * M_PI / 180.0)
 
 #endif

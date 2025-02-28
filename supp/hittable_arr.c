@@ -18,7 +18,7 @@ t_hittable_arr *hittable_arr_new()
         perror("malloc");
         exit(1);
     }
-    return &arr;
+    return arr;
 }
 
 void hittable_arr_free(t_hittable_arr **arr)
@@ -54,22 +54,21 @@ void hittable_arr_add(t_hittable_arr *arr, t_hittable *hittable)
     }
     arr->arr[arr->size] = hittable;
     arr->size++;
-    return true;
 }
 
 bool hittable_arr_hit(t_hittable_arr *arr, t_ray *r, float t_min, float t_max, t_hit_record *rec)
 {
-    t_hit_record *temp_rec;
+    t_hit_record temp_rec;
     bool hit_anything = false;
     float closest_so_far = t_max;
 
     for (int i = 0; i < arr->size; ++i)
     {
-        if (arr->arr[i]->hit(&arr->arr[i], r, t_min, closest_so_far, temp_rec))
+        if (arr->arr[i]->hit(arr->arr[i], r, t_min, closest_so_far, &temp_rec))
         {
             hit_anything = true;
-            closest_so_far = temp_rec->t;
-            *rec = *temp_rec;
+            closest_so_far = temp_rec.t;
+            *rec = temp_rec;
         }
     }
     return hit_anything;
