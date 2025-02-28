@@ -5,7 +5,7 @@
 
 typedef struct s_hittable_arr
 {
-    t_hit_record *arr;
+    t_hittable **arr;
     int size;
     int capacity;
 } t_hittable_arr;
