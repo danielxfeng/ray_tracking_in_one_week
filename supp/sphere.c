@@ -1,6 +1,7 @@
+#include "proj.h"
 #include "sphere.h"
 
-bool hit(t_sphere *sphere, t_ray *r, float t_min, float t_max, t_hit_record *rec);
+bool hit(t_sphere *sphere, t_ray *r, t_interval *interval, t_hit_record *rec);
 
 t_sphere *sphere_new(t_point3 center, float radius)
 {
@@ -18,7 +19,7 @@ t_sphere *sphere_new(t_point3 center, float radius)
     return sphere;
 }
 
-bool hit(t_sphere *sphere, t_ray *ray, float t_min, float t_max, t_hit_record *rec)
+bool hit(t_sphere *sphere, t_ray *ray, t_interval *interval, t_hit_record *rec)
 {
     t_vec3 oc = vec3_sub_vecs(&sphere->sphere_center, ray->origin);
     float a = vec3_length_squared(ray->direction);
@@ -32,10 +33,10 @@ bool hit(t_sphere *sphere, t_ray *ray, float t_min, float t_max, t_hit_record *r
     float sqrtd = sqrt(discriminant);
 
     float root = (h - sqrtd) / a;
-    if (root < t_min || t_max < root)
+    if (!interval_surrounds(interval, root))
     {
         root = (h + sqrtd) / a;
-        if (root <= t_min || t_max <= root)
+        if (!interval_surrounds(interval, root))
             return false;
     }
 

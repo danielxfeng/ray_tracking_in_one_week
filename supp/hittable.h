@@ -1,10 +1,7 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-# include "ray.h"
-# include <stdbool.h>
-# include <math.h>
-
+# include "proj.h"
 typedef struct s_hit_record
 {
     t_point3 p;
@@ -19,7 +16,7 @@ typedef struct s_hittable
     t_point3 sphere_center;
     float sphere_radius;
 
-    bool (*hit)(t_hittable *hittable, t_ray *r, float t_min, float t_max, t_hit_record *rec);
+    bool (*hit)(t_hittable *hittable, t_ray *r, t_interval *interval, t_hit_record *rec);
 } t_hittable;
 
 void set_face_normal(t_ray *r, t_vec3 *outward_normal, t_hit_record *rec);
