@@ -1,7 +1,9 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-# include "proj.h"
+# include "vec3.h"
+# include "ray.h"
+# include "interval.h"
 typedef struct s_hit_record
 {
     t_point3 p;

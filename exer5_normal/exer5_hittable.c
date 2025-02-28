@@ -58,7 +58,6 @@ int main()
     // Pixel delta
     t_vec3 pixel_delta_u = vec3_div_vec(&viewpoint_u, (float)image_width);
     t_vec3 pixel_delta_v = vec3_div_vec(&viewpoint_v, (float)image_height);
-    printf("Pixel delta u: %f %f %f\n", pixel_delta_u.x, pixel_delta_u.y, pixel_delta_u.z);
 
     // Viewpoint top left
     // viewport_upper_left = camera_center - vec3(0, 0, focal_length) - viewport_u/2 - viewport_v/2;

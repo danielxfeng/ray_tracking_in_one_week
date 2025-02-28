@@ -1,7 +1,6 @@
 #ifndef HITTABLE_ARR_H
 #define HITTABLE_ARR_H
 
-# include "proj.h"
 # include "hittable.h"
 
 typedef struct s_hittable_arr

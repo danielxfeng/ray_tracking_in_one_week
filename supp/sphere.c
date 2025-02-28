@@ -1,4 +1,3 @@
-#include "proj.h"
 #include "sphere.h"
 
 bool hit(t_sphere *sphere, t_ray *r, t_interval *interval, t_hit_record *rec);
