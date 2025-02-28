@@ -15,5 +15,6 @@ extern t_interval g_universe;
 float interval_size(t_interval *interval);
 bool interval_contains(t_interval *interval, float value);
 bool interval_surrounds(t_interval *interval, float value);
+float interval_clamp(t_interval *interval, float value);
 
 #endif

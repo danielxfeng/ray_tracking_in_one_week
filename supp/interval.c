@@ -17,3 +17,12 @@ bool interval_surrounds(t_interval *interval, float value)
 {
     return value > interval->min && value < interval->max;
 }
+
+float interval_clamp(t_interval *interval, float value)
+{
+    if (value < interval->min)
+        return interval->min;
+    if (value > interval->max)
+        return interval->max;
+    return value;
+}

@@ -1,12 +1,23 @@
+#include "proj.h"
 #include "camera.h"
 #include "color.h"
-#include <stdio.h>
 
 t_camera camera_new(float aspect_ratio, float image_width)
 {
     t_camera camera;
     camera.image_width = image_width;
     camera.aspect_ratio = aspect_ratio;
+    camera.samples_per_pixel = 1;
+
+    return camera;
+}
+
+t_camera camera_new_aa(float aspect_ratio, float image_width, int samples_per_pixel)
+{
+    t_camera camera;
+    camera.image_width = image_width;
+    camera.aspect_ratio = aspect_ratio;
+    camera.samples_per_pixel = samples_per_pixel;
 
     return camera;
 }
@@ -15,6 +26,7 @@ static void camera_init(t_camera *camera)
 {
     camera->image_height = (int)(camera->image_width / camera->aspect_ratio);
     camera->camera_center = vec3_new(0, 0, 0);
+    camera->pixel_samples_scale = 1.0 / (float)camera->samples_per_pixel;
 
     // Determine viewport dimensions.
     float focal_length = 1.0;
@@ -63,7 +75,26 @@ static t_color ray_color(t_ray *ray, t_hittable_arr *world)
     t_color blue = vec3_new(0.5, 0.7, 1.0);
     t_color temp2 = vec3_mul_vec(&white, 1.0 - a);
     t_color temp3 = vec3_mul_vec(&blue, a);
-    return vec3_add_vecs(&temp2, &temp3);
+    t_color res = vec3_add_vecs(&temp2, &temp3);
+    return res;
+}
+
+static t_vec3 sample_square()
+{
+    t_vec3 vec = vec3_new(RANDOM_FLOAT - 0.5, RANDOM_FLOAT - 0.5, 0);
+    return vec;
+}
+
+static t_ray *camera_get_ray(t_camera *camera, int i, int j)
+{
+    t_vec3 offset = sample_square();
+    t_vec3 temp = vec3_mul_vec(&camera->pixel_delta_u, (float)i + offset.x);
+    t_vec3 temp2 = vec3_mul_vec(&camera->pixel_delta_v, (float)j + offset.y);
+    t_vec3 pixel_sample = vec3_add_vecs(&camera->pixel00_loc, &temp);
+    pixel_sample = vec3_sub_vecs(&pixel_sample, &temp2);
+    t_vec3 direction = vec3_sub_vecs(&pixel_sample, &camera->camera_center);
+    t_ray *ray = ray_new(&camera->camera_center, &direction);
+    return ray;
 }
 
 void camera_render(int fd, t_camera *camera, t_hittable_arr *world)
@@ -76,17 +107,16 @@ void camera_render(int fd, t_camera *camera, t_hittable_arr *world)
         printf("Lines remaining: %d\n", camera->image_height - j);
         for (int i = 0; i < camera->image_width; ++i)
         {
-            t_point3 temp = vec3_mul_vec(&camera->pixel_delta_u, (float)i);
-            t_point3 temp2 = vec3_mul_vec(&camera->pixel_delta_v, (float)j);
-            t_point3 pixel_center = vec3_add_vecs(&camera->pixel00_loc, &temp);
-            pixel_center = vec3_sub_vecs(&pixel_center, &temp2);
-
-            t_vec3 direction = vec3_sub_vecs(&pixel_center, &camera->camera_center);
-            t_ray *ray = ray_new(&camera->camera_center, &direction);
-
-            t_color pixel_color = ray_color(ray, world);
-            write_color(fd, &pixel_color);
-            ray_free(&ray);
+            t_color pixel_color = vec3_new(0, 0, 0);
+            for (int s = 0; s < camera->samples_per_pixel; ++s)
+            {
+                t_ray *r = camera_get_ray(camera, i, j);
+                t_color r_color = ray_color(r, world);
+                vec3_self_add(&pixel_color, &r_color);
+                ray_free(&r);
+            }
+            t_color res = vec3_mul_vec(&pixel_color, camera->pixel_samples_scale);
+            write_color(fd, &res);
         }
     }
     printf("Done\n");

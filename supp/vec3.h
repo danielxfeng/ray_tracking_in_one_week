@@ -43,6 +43,18 @@ void vec3_print(t_vec3 *vec);
 t_vec3 *vec3_self_add(t_vec3 *vec1, t_vec3 *vec2);
 
 /**
+ * @brief Substracts two `vec_3` and stores the result in the first vector.
+ * 
+ * @param vec1 A pointer to `t_vec3` which will be updated.
+ * @param vec2 A pointer to `t_vec3` whose values will be substracted from `vec_1`.
+ * 
+ * @return A pointer to the modified `vec1`.
+ * 
+ * @note It's a in-place substraction, so `vec1` is modified.
+ */
+t_vec3 *vec3_self_sub(t_vec3 *vec1, t_vec3 *vec2);
+
+/**
  * @brief Multiply the given `vec_3` with given scalar in-place.
  * 
  * @param vec A pointer to `t_vec3` which will be updated.
