@@ -5,8 +5,6 @@
 # include <stdbool.h>
 # include <math.h>
 
-typedef t_hittable t_sphere;
-
 typedef struct s_hit_record
 {
     t_point3 p;
@@ -15,6 +13,7 @@ typedef struct s_hit_record
     bool front_face;
 } t_hit_record;
 
+typedef struct s_hittable t_hittable;
 typedef struct s_hittable
 {
     t_point3 sphere_center;

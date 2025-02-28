@@ -1,25 +1,29 @@
-#include "hittable.h"
+#include "sphere.h"
 
 bool hit(t_sphere *sphere, t_ray *r, float t_min, float t_max, t_hit_record *rec);
 
-t_sphere sphere_new(t_point3 center, float radius)
+t_sphere *sphere_new(t_point3 center, float radius)
 {
-    t_sphere sphere;
-
-    sphere.sphere_center = center;
+    t_sphere *sphere = malloc(sizeof(t_sphere));
+    if (!sphere)
+    {
+        perror("malloc");
+        exit(1);
+    }
+    sphere->sphere_center = center;
     if (radius < 0)
         radius = 0;
-    sphere.sphere_radius = radius;
-    sphere.hit = hit;
+    sphere->sphere_radius = radius;
+    sphere->hit = hit;
     return sphere;
 }
 
 bool hit(t_sphere *sphere, t_ray *ray, float t_min, float t_max, t_hit_record *rec)
 {
-    t_vec3 oc = vec3_sub_vecs(&sphere->center, ray->origin);
+    t_vec3 oc = vec3_sub_vecs(&sphere->sphere_center, ray->origin);
     float a = vec3_length_squared(ray->direction);
     float h = vec3_dot(ray->direction, &oc);
-    float c = vec3_length_squared(&oc) - sphere->radius * sphere->radius;
+    float c = vec3_length_squared(&oc) - sphere->sphere_radius * sphere->sphere_radius;
     float discriminant = h * h - a * c;
 
     if (discriminant < 0)
@@ -37,8 +41,8 @@ bool hit(t_sphere *sphere, t_ray *ray, float t_min, float t_max, t_hit_record *r
 
     rec->t = root;
     rec->p = ray_at(ray, root);
-    t_vec3 temp = vec3_sub_vecs(&sphere->p, &sphere->center);
-    t_vec3 outward_normal = vec3_div_vec(&temp, sphere->radius);
+    t_vec3 temp = vec3_sub_vecs(&rec->p, &sphere->sphere_center);
+    t_vec3 outward_normal = vec3_div_vec(&temp, sphere->sphere_radius);
     set_face_normal(ray, &outward_normal, rec);
 
     return true;
