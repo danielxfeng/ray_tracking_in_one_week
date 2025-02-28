@@ -9,7 +9,8 @@ t_color ray_color(t_ray *ray, t_hittable_arr *world)
 {
     t_hit_record rec;
 
-    if (hittable_arr_hit(world, ray, 0, INFINITY, &rec))
+    t_interval interval = {0, INFINITY};
+    if (hittable_arr_hit(world, ray, &interval, &rec))
     {
         t_color black = vec3_new(1, 1, 1);
         t_vec3 temp = vec3_add_vecs(&rec.normal, &black);

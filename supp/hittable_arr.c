@@ -1,5 +1,4 @@
 #include "hittable_arr.h"
-#include <stdlib.h>
 
 t_hittable_arr *hittable_arr_new()
 {
@@ -56,18 +55,19 @@ void hittable_arr_add(t_hittable_arr *arr, t_hittable *hittable)
     arr->size++;
 }
 
-bool hittable_arr_hit(t_hittable_arr *arr, t_ray *r, float t_min, float t_max, t_hit_record *rec)
+bool hittable_arr_hit(t_hittable_arr *arr, t_ray *r, t_interval *interval, t_hit_record *rec)
 {
     t_hit_record temp_rec;
     bool hit_anything = false;
-    float closest_so_far = t_max;
-
+    t_interval temp_interval;
+    temp_interval.min = interval->min;
+    temp_interval.max = interval->max;
     for (int i = 0; i < arr->size; ++i)
     {
-        if (arr->arr[i]->hit(arr->arr[i], r, t_min, closest_so_far, &temp_rec))
+        if (arr->arr[i]->hit(arr->arr[i], r, &temp_interval, &temp_rec))
         {
             hit_anything = true;
-            closest_so_far = temp_rec.t;
+            temp_interval.max = temp_rec.t;
             *rec = temp_rec;
         }
     }

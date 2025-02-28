@@ -4,6 +4,7 @@
 #include "color.h"
 #include "ray.h"
 #include "vec3.h"
+#include "interval.h"
 #include <stdbool.h>
 #include <math.h>
 #include <stdlib.h>
