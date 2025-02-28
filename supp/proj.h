@@ -1,5 +1,5 @@
-#ifndef CONSTANT_H
-#define CONSTANT_H
+#ifndef PROJ_H
+#define PROJ_H
 
 #include "color.h"
 #include "ray.h"
@@ -8,7 +8,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <limits>
+#include <limits.h>
 
 
 # define M_PI (float)3.14159265358979323846
