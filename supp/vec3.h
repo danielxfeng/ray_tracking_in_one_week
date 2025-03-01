@@ -250,4 +250,13 @@ t_vec3 vec3_reflect(t_vec3 *v, t_vec3 *n);
  */
 t_vec3 vec3_refract(t_vec3 *uv, t_vec3 *n, float etai_over_etat);
 
+/**
+ * @brief Returns a copy of the given `vec_3`.
+ * 
+ * @param vec A pointer to `t_vec3`.
+ * 
+ * @return A copy of the given `vec_3`.
+ */
+t_vec3 vec3_copy(t_vec3 *vec);
+
 #endif
