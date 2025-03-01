@@ -9,6 +9,7 @@ typedef struct s_camera
     float aspect_ratio;
     int samples_per_pixel;
     int max_depth;
+    float vfov;
 
     int image_height;
     float pixel_samples_scale;

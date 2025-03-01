@@ -43,7 +43,9 @@ static void camera_init(t_camera *camera)
 
     // Determine viewport dimensions.
     float focal_length = 1.0;
-    float viewport_height = 2.0;
+    float theta = DTR(camera->vfov);
+    float h = tanf(theta / 2);
+    float viewport_height = 2.0 * h * focal_length;
     float viewport_width = camera->aspect_ratio * viewport_height;
 
     // Calculate the vectors across the horizontal and down the vertical viewport edges.
