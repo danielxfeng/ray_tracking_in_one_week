@@ -82,12 +82,16 @@ static t_color ray_color(t_ray *ray, t_hittable_arr *world, int depth_left)
     t_interval interval = {0.001, INFINITY};
     if (hittable_arr_hit(world, ray, &interval, &rec))
     {
-        t_vec3 rand = vec3_random_unit_vector();
-        t_vec3 direction = vec3_add_vecs(&rec.normal, &rand);
-        t_ray *new_ray = ray_new(&rec.p, &direction);
-        t_color res = ray_color(new_ray, world, depth_left - 1);
-        ray_free(&new_ray);
-        return vec3_mul_vec(&res, 0.5);
+        t_ray *scattered;
+        t_color attenuation;
+        if (rec.material->scatter(rec.material, ray, &rec, &attenuation, &scattered))
+        {
+            t_color res = ray_color(scattered, world, depth_left - 1);
+            res = vec3_mul_vecs(&res, &attenuation);
+            ray_free(&scattered);
+            return res;
+        }
+        return vec3_new(0, 0, 0);
     }
 
     t_vec3 unit_direction = vec3_unit(ray->direction);
