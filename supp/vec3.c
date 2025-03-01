@@ -144,3 +144,14 @@ t_vec3 vec3_reflect(t_vec3 *v, t_vec3 *n)
     t_vec3 vec = vec3_mul_vec(n, 2 * vec3_dot(v, n));
     return vec3_sub_vecs(v, &vec);
 }
+
+t_vec3 vec3_refract(t_vec3 *uv, t_vec3 *n, float etai_over_etat)
+{
+    t_vec3 fliped_uv = vec3_flip_minus(uv);
+    float cos_theta = fminf(vec3_dot(&fliped_uv, n), 1.0);
+    t_vec3 temp1 = vec3_mul_vec(n, cos_theta);
+    t_vec3 temp2 = vec3_add_vecs(uv, &temp1);
+    t_vec3 r_out_perp = vec3_mul_vec(&temp2, etai_over_etat);
+    t_vec3 r_out_parallel = vec3_mul_vec(n, -sqrtf(fabsf((float)1.0 - vec3_length_squared(&r_out_perp))));
+    return vec3_add_vecs(&r_out_perp, &r_out_parallel);
+}

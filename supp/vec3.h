@@ -239,4 +239,15 @@ bool vec3_near_zero(t_vec3 *vec);
  */
 t_vec3 vec3_reflect(t_vec3 *v, t_vec3 *n);
 
+/**
+ * @brief Returns the refraction of the given vector.
+ * 
+ * @param uv A pointer to `t_vec3`.
+ * @param n A pointer to `t_vec3`.
+ * @param etai_over_etat The ratio of the refractive indices.
+ * 
+ * @return The refraction of the given vector.
+ */
+t_vec3 vec3_refract(t_vec3 *uv, t_vec3 *n, float etai_over_etat);
+
 #endif

@@ -10,6 +10,7 @@ typedef struct s_material
 {
     t_color albedo;
     float fuzz;
+    float ref_idx;
 
     bool (*scatter)(t_material *mat, t_ray *r_in, t_hit_record *rec, t_vec3 *attenuation, t_ray **scattered);
 } t_material;
