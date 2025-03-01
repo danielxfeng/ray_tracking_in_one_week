@@ -1,5 +1,6 @@
 #include "proj.h"
 #include "vec3.h"
+#include <math.h>
 
 t_vec3 vec3_new(float x, float y, float z)
 {
@@ -130,4 +131,16 @@ t_vec3 vec3_random_on_hemisphere (t_vec3 *normal)
     if (vec3_dot(&random, normal) > 0)
         return random;
     return vec3_flip_minus(&random);
+}
+
+bool vec3_near_zero(t_vec3 *vec)
+{
+    const float s = 1e-8;
+    return fabsf(vec->x) < s && fabsf(vec->y) < s && fabsf(vec->z) < s;
+}
+
+t_vec3 vec3_reflect(t_vec3 *v, t_vec3 *n)
+{
+    t_vec3 vec = vec3_mul_vec(n, 2 * vec3_dot(v, n));
+    return vec3_sub_vecs(v, &vec);
 }

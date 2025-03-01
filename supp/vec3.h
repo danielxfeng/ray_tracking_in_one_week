@@ -5,6 +5,7 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 //
 // A lightweight 3D vector library
@@ -218,5 +219,24 @@ t_vec3 vec3_random_unit_vector();
  * @return A random vector on the hemisphere.
  */
 t_vec3 vec3_random_on_hemisphere (t_vec3 *normal);
+
+/**
+ * @brief Returns if the given `vec_3` is near zero.
+ * 
+ * @param vec A pointer to `t_vec3`.
+ * 
+ * @return `true` if the given `vec_3` is near zero, otherwise `false`.
+ */
+bool vec3_near_zero(t_vec3 *vec);
+
+/**
+ * @brief Returns the reflection of the given vector.
+ * 
+ * @param v A pointer to `t_vec3`.
+ * @param n A pointer to `t_vec3`.
+ * 
+ * @return The reflection of the given vector.
+ */
+t_vec3 vec3_reflect(t_vec3 *v, t_vec3 *n);
 
 #endif

@@ -2,7 +2,7 @@
 
 bool hit(t_sphere *sphere, t_ray *r, t_interval *interval, t_hit_record *rec);
 
-t_sphere *sphere_new(t_point3 center, float radius)
+t_sphere *sphere_new(t_point3 center, float radius, t_material *material)
 {
     t_sphere *sphere = malloc(sizeof(t_sphere));
     if (!sphere)
@@ -15,6 +15,7 @@ t_sphere *sphere_new(t_point3 center, float radius)
         radius = 0;
     sphere->sphere_radius = radius;
     sphere->hit = hit;
+    sphere->material = material;
     return sphere;
 }
 
@@ -43,6 +44,7 @@ bool hit(t_sphere *sphere, t_ray *ray, t_interval *interval, t_hit_record *rec)
     rec->p = ray_at(ray, root);
     t_vec3 temp = vec3_sub_vecs(&rec->p, &sphere->sphere_center);
     t_vec3 outward_normal = vec3_div_vec(&temp, sphere->sphere_radius);
+    rec->material = sphere->material;
     set_face_normal(ray, &outward_normal, rec);
 
     return true;
