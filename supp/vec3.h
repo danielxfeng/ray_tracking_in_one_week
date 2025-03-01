@@ -185,4 +185,38 @@ float vec3_dot(t_vec3 *vec1, t_vec3 *vec2);
  */
 t_vec3 vec3_unit(t_vec3 *vec);
 
+/**
+ * @brief Returns a random `vec_3` with each property in the range of [0, 1].
+ * 
+ * @return A random `vec_3`.
+ */
+t_vec3 vec3_random();
+
+/**
+ * @brief Returns a random `vec_3` with each property in the range of [min, max].
+ * 
+ * @param min The minimum value of each property.
+ * @param max The maximum value of each property.
+ * 
+ * @return A random `vec_3`.
+ */
+t_vec3 vec3_random_range(float min, float max);
+
+/**
+ * @brief Returns a random unit vector.
+ * 
+ * @return A random unit vector.
+ */
+t_vec3 vec3_random_unit_vector();
+
+
+/**
+ * @brief Returns a random vector on the hemisphere.
+ * 
+ * @param normal A pointer to `t_vec3` which is the normal vector.
+ * 
+ * @return A random vector on the hemisphere.
+ */
+t_vec3 vec3_random_on_hemisphere (t_vec3 *normal);
+
 #endif

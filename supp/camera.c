@@ -64,9 +64,11 @@ static t_color ray_color(t_ray *ray, t_hittable_arr *world)
     t_interval interval = {0, INFINITY};
     if (hittable_arr_hit(world, ray, &interval, &rec))
     {
-        t_color black = vec3_new(1, 1, 1);
-        t_vec3 temp = vec3_add_vecs(&rec.normal, &black);
-        return vec3_mul_vec(&temp, 0.5);
+        t_vec3 direction = vec3_random_on_hemisphere(&rec.normal);
+        t_ray *new_ray = ray_new(&rec.p, &direction);
+        t_color res = ray_color(new_ray, world);
+        ray_free(&new_ray);
+        return vec3_mul_vec(&res, 0.5);
     }
 
     t_vec3 unit_direction = vec3_unit(ray->direction);

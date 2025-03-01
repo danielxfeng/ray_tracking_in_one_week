@@ -1,3 +1,4 @@
+#include "proj.h"
 #include "vec3.h"
 
 t_vec3 vec3_new(float x, float y, float z)
@@ -100,4 +101,35 @@ t_vec3 vec3_unit(t_vec3 *vec)
     float len = vec3_length(vec);
     assert(len != 0);
     return vec3_div_vec(vec, len);
+}
+
+t_vec3 vec3_random()
+{
+    return vec3_new(RANDOM_FLOAT, RANDOM_FLOAT, RANDOM_FLOAT);
+}
+
+t_vec3 vec3_random_range(float min, float max)
+{
+    return vec3_new(RANDOM_FLOAT_RANGE(min, max), RANDOM_FLOAT_RANGE(min, max), RANDOM_FLOAT_RANGE(min, max));
+}
+
+t_vec3 vec3_random_unit_vector()
+{
+    while (1)
+    {
+        t_vec3 vec = vec3_random_range(-1, 1);
+        printf("vec3_random_unit_vector: ");
+        vec3_print(&vec);
+        float len_sq = vec3_length_squared(&vec);
+        if (len_sq > 1e-12 && len_sq <= 1)
+            return vec3_div_vec(&vec, sqrt(len_sq));
+    }
+}
+
+t_vec3 vec3_random_on_hemisphere (t_vec3 *normal)
+{
+    t_vec3 random = vec3_random_unit_vector();
+    if (vec3_dot(&random, normal) > 0)
+        return random;
+    return vec3_flip_minus(&random);
 }
