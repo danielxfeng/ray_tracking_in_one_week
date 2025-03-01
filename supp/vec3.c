@@ -118,8 +118,6 @@ t_vec3 vec3_random_unit_vector()
     while (1)
     {
         t_vec3 vec = vec3_random_range(-1, 1);
-        printf("vec3_random_unit_vector: ");
-        vec3_print(&vec);
         float len_sq = vec3_length_squared(&vec);
         if (len_sq > 1e-12 && len_sq <= 1)
             return vec3_div_vec(&vec, sqrt(len_sq));
