@@ -94,13 +94,15 @@ static void camera_init(t_camera *camera)
     t_vec3 vv2 = vec3_div_vec(&viewpoint_v, 2);
     t_vec3 viewpoint_top_left = vec3_sub_vecs(&camera->camera_center, &focal_w);
     viewpoint_top_left = vec3_sub_vecs(&viewpoint_top_left, &vu2);
-    viewpoint_top_left = vec3_sub_vecs(&viewpoint_top_left, &vv2);
+    viewpoint_top_left = vec3_add_vecs(&viewpoint_top_left, &vv2);
 
     // Pixel 100 location
     // viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
     t_vec3 temp = vec3_add_vecs(&camera->pixel_delta_u, &camera->pixel_delta_v);
     temp = vec3_mul_vec(&temp, 0.5);
     camera->pixel00_loc = vec3_add_vecs(&viewpoint_top_left, &temp);
+    printf("top_left: ");
+    vec3_print(&viewpoint_top_left);
 }
 
 static t_color ray_color(t_ray *ray, t_hittable_arr *world, int depth_left)
