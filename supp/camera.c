@@ -8,6 +8,7 @@ t_camera camera_new(float aspect_ratio, float image_width)
     camera.image_width = image_width;
     camera.aspect_ratio = aspect_ratio;
     camera.samples_per_pixel = 1;
+    camera.max_depth = 10000;
 
     return camera;
 }
@@ -18,6 +19,18 @@ t_camera camera_new_aa(float aspect_ratio, float image_width, int samples_per_pi
     camera.image_width = image_width;
     camera.aspect_ratio = aspect_ratio;
     camera.samples_per_pixel = samples_per_pixel;
+    camera.max_depth = 10000;
+
+    return camera;
+}
+
+t_camera camera_new_aa_depth(float aspect_ratio, float image_width, int samples_per_pixel, int max_depth)
+{
+    t_camera camera;
+    camera.image_width = image_width;
+    camera.aspect_ratio = aspect_ratio;
+    camera.samples_per_pixel = samples_per_pixel;
+    camera.max_depth = max_depth;
 
     return camera;
 }
@@ -57,16 +70,22 @@ static void camera_init(t_camera *camera)
     camera->pixel00_loc = vec3_add_vecs(&viewpoint_top_left, &temp);
 }
 
-static t_color ray_color(t_ray *ray, t_hittable_arr *world)
+static t_color ray_color(t_ray *ray, t_hittable_arr *world, int depth_left)
 {
+    if (depth_left <= 0)
+    {
+        return vec3_new(0, 0, 0);
+    }
+
     t_hit_record rec;
 
-    t_interval interval = {0, INFINITY};
+    t_interval interval = {0.001, INFINITY};
     if (hittable_arr_hit(world, ray, &interval, &rec))
     {
-        t_vec3 direction = vec3_random_on_hemisphere(&rec.normal);
+        t_vec3 rand = vec3_random_unit_vector();
+        t_vec3 direction = vec3_add_vecs(&rec.normal, &rand);
         t_ray *new_ray = ray_new(&rec.p, &direction);
-        t_color res = ray_color(new_ray, world);
+        t_color res = ray_color(new_ray, world, depth_left - 1);
         ray_free(&new_ray);
         return vec3_mul_vec(&res, 0.5);
     }
@@ -113,7 +132,7 @@ void camera_render(int fd, t_camera *camera, t_hittable_arr *world)
             for (int s = 0; s < camera->samples_per_pixel; ++s)
             {
                 t_ray *r = camera_get_ray(camera, i, j);
-                t_color r_color = ray_color(r, world);
+                t_color r_color = ray_color(r, world, camera->max_depth);
                 vec3_self_add(&pixel_color, &r_color);
                 ray_free(&r);
             }
