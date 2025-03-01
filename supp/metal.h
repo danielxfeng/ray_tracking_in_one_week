@@ -5,6 +5,6 @@
 
 typedef t_material t_metal;
 
-t_material *metal_new(t_color albedo);
+t_material *metal_new(t_color albedo, float fuzz);
 
 #endif
