@@ -80,7 +80,7 @@ static void camera_init(t_camera *camera)
     // Calculate the vectors across the horizontal and down the vertical viewport edges.
     t_vec3 viewpoint_u = vec3_mul_vec(&camera->u, viewport_width);
     t_vec3 viewpoint_v = vec3_mul_vec(&camera->v, viewport_height);
-    viewpoint_v = vec3_flip_minus(&viewpoint_v);
+    //viewpoint_v = vec3_flip_minus(&viewpoint_v);
 
     // Calculate the horizontal and vertical delta vectors from pixel to pixel.
     camera->pixel_delta_u = vec3_div_vec(&viewpoint_u, (float)camera->image_width);
