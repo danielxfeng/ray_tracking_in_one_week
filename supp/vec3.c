@@ -155,3 +155,8 @@ t_vec3 vec3_refract(t_vec3 *uv, t_vec3 *n, float etai_over_etat)
     t_vec3 r_out_parallel = vec3_mul_vec(n, -sqrtf(fabsf((float)1.0 - vec3_length_squared(&r_out_perp))));
     return vec3_add_vecs(&r_out_perp, &r_out_parallel);
 }
+
+t_vec3 vec3_copy(t_vec3 *vec)
+{
+    return vec3_new(vec->x, vec->y, vec->z);
+}

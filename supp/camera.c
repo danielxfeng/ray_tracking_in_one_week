@@ -20,6 +20,10 @@ t_camera camera_new_aa(float aspect_ratio, float image_width, int samples_per_pi
     camera.aspect_ratio = aspect_ratio;
     camera.samples_per_pixel = samples_per_pixel;
     camera.max_depth = 10000;
+    camera.vfov = 90;
+    camera.look_from = vec3_new(0, 0, 0);
+    camera.look_at = vec3_new(0, 0, -1);
+    camera.vup = vec3_new(0, 1, 0);
 
     return camera;
 }
@@ -31,6 +35,25 @@ t_camera camera_new_aa_depth(float aspect_ratio, float image_width, int samples_
     camera.aspect_ratio = aspect_ratio;
     camera.samples_per_pixel = samples_per_pixel;
     camera.max_depth = max_depth;
+    camera.vfov = 90;
+    camera.look_from = vec3_new(0, 0, 0);
+    camera.look_at = vec3_new(0, 0, -1);
+    camera.vup = vec3_new(0, 1, 0);
+
+    return camera;
+}
+
+t_camera camera_new_full(float aspect_ratio, float image_width, int samples_per_pixel, int max_depth, float vfov, t_point3 *look_from, t_point3 *look_at, t_vec3 *vup)
+{
+    t_camera camera;
+    camera.image_width = image_width;
+    camera.aspect_ratio = aspect_ratio;
+    camera.samples_per_pixel = samples_per_pixel;
+    camera.max_depth = max_depth;
+    camera.vfov = vfov;
+    camera.look_from = vec3_copy(look_from);
+    camera.look_at = vec3_copy(look_at);
+    camera.vup = vec3_copy(vup);
 
     return camera;
 }
@@ -38,19 +61,26 @@ t_camera camera_new_aa_depth(float aspect_ratio, float image_width, int samples_
 static void camera_init(t_camera *camera)
 {
     camera->image_height = (int)(camera->image_width / camera->aspect_ratio);
-    camera->camera_center = vec3_new(0, 0, 0);
+    camera->camera_center = vec3_copy(&camera->look_from);
     camera->pixel_samples_scale = 1.0 / (float)camera->samples_per_pixel;
 
     // Determine viewport dimensions.
-    float focal_length = 1.0;
+    t_vec3 dist = vec3_sub_vecs(&camera->look_from, &camera->look_at);
+    float focal_length = vec3_length(&dist);
     float theta = DTR(camera->vfov);
     float h = tanf(theta / 2);
     float viewport_height = 2.0 * h * focal_length;
     float viewport_width = camera->aspect_ratio * viewport_height;
 
+    camera->w = vec3_unit(&dist);
+    t_vec3 cross = vec3_cross(&camera->vup, &camera->w);
+    camera->u = vec3_unit(&cross);
+    camera->v = vec3_cross(&camera->w, &camera->u);
+
     // Calculate the vectors across the horizontal and down the vertical viewport edges.
-    t_vec3 viewpoint_u = vec3_new(viewport_width, 0, 0);
-    t_vec3 viewpoint_v = vec3_new(0, viewport_height, 0);
+    t_vec3 viewpoint_u = vec3_mul_vec(&camera->u, viewport_width);
+    t_vec3 viewpoint_v = vec3_mul_vec(&camera->v, viewport_height);
+    viewpoint_v = vec3_flip_minus(&viewpoint_v);
 
     // Calculate the horizontal and vertical delta vectors from pixel to pixel.
     camera->pixel_delta_u = vec3_div_vec(&viewpoint_u, (float)camera->image_width);
@@ -58,16 +88,17 @@ static void camera_init(t_camera *camera)
 
     // Viewpoint top left
     // viewport_upper_left = camera_center - vec3(0, 0, focal_length) - viewport_u/2 - viewport_v/2;
-    t_point3 temp = vec3_new(0, 0, focal_length);
-    t_point3 viewpoint_top_left = vec3_sub_vecs(&camera->camera_center, &temp);
-    temp = vec3_div_vec(&viewpoint_u, 2);
-    viewpoint_top_left = vec3_sub_vecs(&viewpoint_top_left, &temp);
-    temp = vec3_div_vec(&viewpoint_v, 2);
-    viewpoint_top_left = vec3_add_vecs(&viewpoint_top_left, &temp);
+    // center - (focal_length * w) - viewport_u/2 - viewport_v/2
+    t_vec3 focal_w = vec3_mul_vec(&camera->w, focal_length);
+    t_vec3 vu2 = vec3_div_vec(&viewpoint_u, 2);
+    t_vec3 vv2 = vec3_div_vec(&viewpoint_v, 2);
+    t_vec3 viewpoint_top_left = vec3_sub_vecs(&camera->camera_center, &focal_w);
+    viewpoint_top_left = vec3_sub_vecs(&viewpoint_top_left, &vu2);
+    viewpoint_top_left = vec3_sub_vecs(&viewpoint_top_left, &vv2);
 
     // Pixel 100 location
     // viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
-    temp = vec3_add_vecs(&camera->pixel_delta_u, &camera->pixel_delta_v);
+    t_vec3 temp = vec3_add_vecs(&camera->pixel_delta_u, &camera->pixel_delta_v);
     temp = vec3_mul_vec(&temp, 0.5);
     camera->pixel00_loc = vec3_add_vecs(&viewpoint_top_left, &temp);
 }
