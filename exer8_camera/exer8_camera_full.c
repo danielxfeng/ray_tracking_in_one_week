@@ -31,10 +31,10 @@ int main()
         return 1;
     }
 
-    t_point3 look_from = vec3_new(0, 0, 0);
+    t_point3 look_from = vec3_new(-2, 2, 0);
     t_point3 look_at = vec3_new(0, 0, -1);
     t_vec3 vup = vec3_new(0, 1, 0);
-    t_camera camera = camera_new_full(16.0 / 9.0, 400, 100, 50, 90, &look_from, &look_at, &vup);
+    t_camera camera = camera_new_full(16.0 / 9.0, 400, 100, 50, 20, &look_from, &look_at, &vup);
     camera_render(fd, &camera, world);
 
     hittable_arr_free(&world);
