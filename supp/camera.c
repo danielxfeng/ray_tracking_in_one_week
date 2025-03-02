@@ -66,10 +66,9 @@ static void camera_init(t_camera *camera)
 
     // Determine viewport dimensions.
     t_vec3 dist = vec3_sub_vecs(&camera->look_from, &camera->look_at);
-    float focal_length = vec3_length(&dist);
     float theta = DTR(camera->vfov);
     float h = tanf(theta / 2);
-    float viewport_height = 2.0 * h * focal_length;
+    float viewport_height = 2.0 * h * camera->focus_dist;
     float viewport_width = camera->aspect_ratio * viewport_height;
 
     camera->w = vec3_unit(&dist);
@@ -89,7 +88,7 @@ static void camera_init(t_camera *camera)
     // Viewpoint top left
     // viewport_upper_left = camera_center - vec3(0, 0, focal_length) - viewport_u/2 - viewport_v/2;
     // center - (focal_length * w) - viewport_u/2 - viewport_v/2
-    t_vec3 focal_w = vec3_mul_vec(&camera->w, focal_length);
+    t_vec3 focal_w = vec3_mul_vec(&camera->w, camera->focus_dist);
     t_vec3 vu2 = vec3_div_vec(&viewpoint_u, 2);
     t_vec3 vv2 = vec3_div_vec(&viewpoint_v, 2);
     t_vec3 viewpoint_top_left = vec3_sub_vecs(&camera->camera_center, &focal_w);
@@ -101,8 +100,11 @@ static void camera_init(t_camera *camera)
     t_vec3 temp = vec3_add_vecs(&camera->pixel_delta_u, &camera->pixel_delta_v);
     temp = vec3_mul_vec(&temp, 0.5);
     camera->pixel00_loc = vec3_add_vecs(&viewpoint_top_left, &temp);
-    printf("top_left: ");
-    vec3_print(&viewpoint_top_left);
+
+    // Calculate the defocus disk basis vectors.
+    float defocus_radius = camera->focus_dist * tanf(DTR(camera->defocus_angle / 2));
+    camera->defocus_disk_u = vec3_mul_vec(&camera->u, defocus_radius);
+    camera->defocus_disk_v = vec3_mul_vec(&camera->v, defocus_radius); 
 }
 
 static t_color ray_color(t_ray *ray, t_hittable_arr *world, int depth_left)
@@ -145,6 +147,16 @@ static t_vec3 sample_square()
     return vec;
 }
 
+static t_point3 camera_defocus_disk_sample(t_camera *camera)
+{
+    t_vec3 p = vec3_random_in_unit_disk();
+    t_vec3 temp = vec3_mul_vec(&camera->defocus_disk_u, p.x);
+    t_vec3 temp2 = vec3_mul_vec(&camera->defocus_disk_v, p.y);
+    t_vec3 offset = vec3_add_vecs(&temp, &temp2);
+    t_point3 res = vec3_add_vecs(&camera->camera_center, &offset);
+    return res;
+}
+
 static t_ray *camera_get_ray(t_camera *camera, int i, int j)
 {
     t_vec3 offset = sample_square();
@@ -152,8 +164,9 @@ static t_ray *camera_get_ray(t_camera *camera, int i, int j)
     t_vec3 temp2 = vec3_mul_vec(&camera->pixel_delta_v, (float)j + offset.y);
     t_vec3 pixel_sample = vec3_add_vecs(&camera->pixel00_loc, &temp);
     pixel_sample = vec3_sub_vecs(&pixel_sample, &temp2);
+    t_vec3 orig = camera->defocus_angle <= 0 ? camera->camera_center : camera_defocus_disk_sample(camera);
     t_vec3 direction = vec3_sub_vecs(&pixel_sample, &camera->camera_center);
-    t_ray *ray = ray_new(&camera->camera_center, &direction);
+    t_ray *ray = ray_new(&orig, &direction);
     return ray;
 }
 

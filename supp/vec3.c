@@ -160,3 +160,12 @@ t_vec3 vec3_copy(t_vec3 *vec)
 {
     return vec3_new(vec->x, vec->y, vec->z);
 }
+
+t_vec3 vec3_random_in_unit_disk() 
+{
+    while (true) {
+        t_vec3 p = vec3_new(RANDOM_FLOAT_RANGE(-1, 1), RANDOM_FLOAT_RANGE(-1, 1), 0);
+        if (vec3_length_squared(&p) < 1)
+            return p;
+    }
+}

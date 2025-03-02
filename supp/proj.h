@@ -13,7 +13,7 @@
 
 
 # define PI (float)3.14159265358979323846
-# define DTR(degrees) (degrees * M_PI / 180.0)
+# define DTR(degrees) (degrees * PI / 180.0)
 # define RANDOM_FLOAT (float)rand() / (float)(RAND_MAX + 1.0)
 # define RANDOM_FLOAT_RANGE(min, max) (float)(min + (max - min) * RANDOM_FLOAT)
 
