@@ -147,10 +147,14 @@ static t_vec3 sample_square()
     return vec;
 }
 
-static t_point3 camera_defocus_disk_sample()
+static t_point3 camera_defocus_disk_sample(t_camera *camera)
 {
     t_vec3 p = vec3_random_in_unit_disk();
-    t_vec3 temp = 
+    t_vec3 temp = vec3_mul_vec(&camera->defocus_disk_u, p.x);
+    t_vec3 temp2 = vec3_mul_vec(&camera->defocus_disk_v, p.y);
+    t_vec3 offset = vec3_add_vecs(&temp, &temp2);
+    t_point3 res = vec3_add_vecs(&camera->camera_center, &offset);
+    return res;
 }
 
 static t_ray *camera_get_ray(t_camera *camera, int i, int j)

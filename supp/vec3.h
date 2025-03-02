@@ -259,6 +259,11 @@ t_vec3 vec3_refract(t_vec3 *uv, t_vec3 *n, float etai_over_etat);
  */
 t_vec3 vec3_copy(t_vec3 *vec);
 
+/**
+ * @brief Returns a random vector in the unit disk.
+ * 
+ * @return A random vector in the unit disk.
+ */
 t_vec3 vec3_random_in_unit_disk();
 
 #endif
