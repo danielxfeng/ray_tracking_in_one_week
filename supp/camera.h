@@ -13,6 +13,8 @@ typedef struct s_camera
     t_point3 look_from;
     t_point3 look_at;
     t_vec3 vup;
+    float defocus_angle;
+    float focus_dist;
 
     int image_height;
     float pixel_samples_scale;
@@ -20,6 +22,8 @@ typedef struct s_camera
     t_point3 pixel00_loc;
     t_vec3 pixel_delta_u;
     t_vec3 pixel_delta_v;
+    t_vec3 defocus_disk_u;
+    t_vec3 defocus_disk_v;
     t_vec3 u, v, w;
 } t_camera;
 

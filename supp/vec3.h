@@ -259,4 +259,6 @@ t_vec3 vec3_refract(t_vec3 *uv, t_vec3 *n, float etai_over_etat);
  */
 t_vec3 vec3_copy(t_vec3 *vec);
 
+t_vec3 vec3_random_in_unit_disk();
+
 #endif
