@@ -1,9 +1,10 @@
 {
     "files.associations": {
-        "*.embeddedhtml": "html",
         "*.css": "tailwindcss",
+        "*.embeddedhtml": "html",
         "hittable_arr.h": "c",
         "hittable.h": "c",
-        "fcntl.h": "c"
+        "fcntl.h": "c",
+        "math.h": "c"
     }
 }

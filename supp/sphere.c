@@ -30,7 +30,7 @@ bool hit(t_sphere *sphere, t_ray *ray, t_interval *interval, t_hit_record *rec)
     if (discriminant < 0)
         return false;
 
-    float sqrtd = sqrt(discriminant);
+    float sqrtd = sqrtf(discriminant);
 
     float root = (h - sqrtd) / a;
     if (!interval_surrounds(interval, root))

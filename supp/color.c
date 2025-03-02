@@ -7,7 +7,7 @@ static float linear_to_gamma(float linear)
 {
     if (linear <= 0.0)
         return 0.0;
-    return sqrt(linear);
+    return sqrtf(linear);
 }
 
 void write_color(int fd, t_color *pixel_color)
