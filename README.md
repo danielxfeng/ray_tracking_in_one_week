@@ -8,5 +8,5 @@ This project is a personal reimplementation of the techniques discussed in the i
 The entire project is rewritten in C.
 
 Attached is the final picture of the project.
-All features are implemented except defocus.
-[!result.png](a picture of Ray Tracing)
+All features are implemented except defocus which is not neccessary in Mini-RT project.
+![result.png](a picture of Ray Tracing)
